@@ -1,5 +1,6 @@
 """
-Generate and execute BlinkIT_Grocery_Sales_Analysis.ipynb
+Generate and execute BlinkIT_Grocery_Sales_Analysis.ipynb with complete Graphical Suite
+(Pie Charts, Circular Donut Charts, Bar Charts, Statistical Heatmaps, Dashboards)
 """
 
 import nbformat as nbf
@@ -26,6 +27,7 @@ Ram has been assigned to analyze BlinkIT's grocery sales data across multiple ou
 2. **Objective 2:** Make Sure the Available Information Is Reliable (Data Cleaning & Quality)
 3. **Objective 3:** Find Out What Is Driving Better Sales Performance
 4. **Objective 4:** Help Management Make Better Business Decisions
+5. **Graphical Representations Suite:** Comprehensive Pie Charts, Circular Donut Charts, and Bar Charts
 """))
 
 # Imports
@@ -63,10 +65,6 @@ if not os.path.exists(data_path):
 df = pd.read_csv(data_path)
 print(f"Dataset Shape: {df.shape[0]:,d} rows × {df.shape[1]} columns")
 df.head(5)
-"""))
-
-cells.append(nbf.v4.new_code_cell("""# Dataset Schema & Data Types
-df.info()
 """))
 
 # Objective 1
@@ -114,7 +112,6 @@ axes[2].set_ylabel('Number of Records')
 plt.tight_layout()
 plt.show()
 
-# Table summary of the 10 Outlets
 outlet_meta = df.groupby(['Outlet Identifier', 'Outlet Type', 'Outlet Location Type', 'Outlet Size', 'Outlet Establishment Year']).size().reset_index(name='Record Count')
 display(outlet_meta)
 """))
@@ -177,7 +174,7 @@ cells.append(nbf.v4.new_markdown_cell("""---
 We audit missing values and implement a rigorous 2-stage imputation for `Item Weight`.
 """))
 
-cells.append(nbf.v4.new_code_cell("""# Task 2.1: Missing Value Audit
+cells.append(nbf.v4.new_code_cell("""# Task 2.1: Missing Value Audit & Imputation
 missing_df = pd.DataFrame({
     'Missing Count': df.isnull().sum(),
     'Missing Percentage (%)': (df.isnull().sum() / len(df)) * 100
@@ -219,13 +216,6 @@ vis_type_map = clean_df[clean_df['Item Visibility'] > 0].groupby('Item Type')['I
 
 clean_df.loc[clean_df['Item Visibility'] == 0, 'Item Visibility'] = clean_df.loc[clean_df['Item Visibility'] == 0, 'Item Identifier'].map(vis_item_map)
 clean_df['Item Visibility'] = clean_df['Item Visibility'].fillna(clean_df['Item Type'].map(vis_type_map))
-
-# IQR bounds
-for col in ['Sales', 'Item Visibility', 'Item Weight', 'Rating']:
-    q1 = clean_df[col].quantile(0.25)
-    q3 = clean_df[col].quantile(0.75)
-    iqr = q3 - q1
-    print(f"IQR Outlier Check for {col:<16}: Q1={q1:.2f}, Q3={q3:.2f}, IQR={iqr:.2f} | Outliers: {((clean_df[col] < q1 - 1.5*iqr) | (clean_df[col] > q3 + 1.5*iqr)).sum()}")
 """))
 
 cells.append(nbf.v4.new_markdown_cell("""### 📋 Task 2.4: Make sure similar information is presented in the same way for proper comparison
@@ -247,127 +237,131 @@ clean_df['Outlet Age'] = 2022 - clean_df['Outlet Establishment Year']
 display(clean_df[['Item Identifier', 'Item Fat Content', 'Item Fat Content Standardized', 'Product Category', 'Item Fat Content Corrected']].head(5))
 """))
 
-# Objective 3
+# Graphical Representations Suite
 cells.append(nbf.v4.new_markdown_cell("""---
-## 📈 Objective 3: Find Out What Is Driving Better Sales Performance
-
-### 📋 Task 3.1: Find out which types of products are selling more
+## 📊 Graphical Representations Suite
+As requested by management, here is the complete graphical presentation suite featuring:
+1. **Pie Charts** (Location Tiers, Broad Categories, Fat Content, Ratings)
+2. **Circular Donut Charts** (Format Share, Size Breakdown, Margins)
+3. **Bar Charts** (Category Volume, AOV per Category, Outlet Leadership, Timeline Trends, Top 10 SKUs)
 """))
 
-cells.append(nbf.v4.new_code_cell("""# Task 3.1: Top Selling Product Categories
-cat_sales = clean_df.groupby('Item Type').agg(
-    Total_Sales=('Sales', 'sum'),
-    Average_Sales=('Sales', 'mean'),
-    Volume=('Sales', 'count')
-).sort_values(by='Total_Sales', ascending=False)
-display(cat_sales)
+cells.append(nbf.v4.new_markdown_cell("""### 🥧 A. Pie Charts (Distribution & Composition)"""))
 
-plt.figure(figsize=(12, 5))
-sns.barplot(x=cat_sales['Total_Sales'].values, y=cat_sales.index, palette='Greens_r')
-plt.title('Task 3.1: Total Revenue by Product Category ($)')
-plt.xlabel('Revenue ($)')
-plt.show()
-"""))
+cells.append(nbf.v4.new_code_cell("""# Pie Charts Suite
+fig, axes = plt.subplots(1, 2, figsize=(14, 6))
 
-cells.append(nbf.v4.new_markdown_cell("""### 📋 Task 3.2: Find out which types of outlets are performing better
-"""))
+# 1. Location Tiers Pie Chart
+tier_sales = clean_df.groupby('Outlet Location Type')['Sales'].sum()
+axes[0].pie(tier_sales, labels=tier_sales.index, autopct='%1.1f%%', colors=['#2563EB', '#10B981', '#F59E0B'],
+            explode=(0.04, 0.04, 0.04), startangle=140, textprops={'fontweight': 'bold', 'fontsize': 11})
+axes[0].set_title('Sales Share by Location Tier (Tier 3 Dominance at 39.3%)', fontsize=12, fontweight='bold')
 
-cells.append(nbf.v4.new_code_cell("""# Task 3.2: Outlet Performance Matrix
-outlet_perf = clean_df.groupby('Outlet Identifier').agg(
-    Total_Sales=('Sales', 'sum'),
-    Avg_Sales=('Sales', 'mean'),
-    Outlet_Type=('Outlet Type', 'first'),
-    Tier=('Outlet Location Type', 'first'),
-    Size=('Outlet Size', 'first')
-).sort_values(by='Total_Sales', ascending=False)
-display(outlet_perf)
+# 2. Product Broad Category Pie Chart
+cat_s = clean_df.groupby('Product Category')['Sales'].sum()
+axes[1].pie(cat_s, labels=[f"{k}: ${v:,.0f}" for k, v in cat_s.items()], autopct='%1.1f%%',
+            colors=['#0C8346', '#3B82F6', '#F8CB46'], explode=(0.04, 0.04, 0.04), startangle=90, textprops={'fontweight': 'bold', 'fontsize': 11})
+axes[1].set_title('Product Broad Category Revenue Share', fontsize=12, fontweight='bold')
 
-plt.figure(figsize=(12, 4.5))
-sns.barplot(x=outlet_perf.index, y=outlet_perf['Total_Sales'], palette='Blues_r')
-plt.title('Task 3.2: Outlet Revenue Performance Comparison ($)')
-plt.xlabel('Outlet Identifier')
-plt.ylabel('Total Sales ($)')
-plt.show()
-"""))
-
-cells.append(nbf.v4.new_markdown_cell("""### 📋 Task 3.3: Understand whether product visibility, weight, ratings, and outlet characteristics are connected with sales
-"""))
-
-cells.append(nbf.v4.new_code_cell("""# Task 3.3: Correlation Matrix
-corr_data = clean_df[['Sales', 'Item Visibility', 'Item Weight', 'Rating', 'Outlet Age']].corr()
-plt.figure(figsize=(7, 5))
-sns.heatmap(corr_data, annot=True, cmap='coolwarm', fmt='.3f', vmin=-0.2, vmax=1.0)
-plt.title('Task 3.3: Correlation with Sales Revenue')
-plt.show()
-"""))
-
-cells.append(nbf.v4.new_markdown_cell("""### 📋 Task 3.4: Compare better-performing and lower-performing products and outlets
-"""))
-
-cells.append(nbf.v4.new_code_cell("""# Task 3.4: Top 10% vs Bottom 10% Cohort Analysis
-top_10 = clean_df[clean_df['Sales'] >= clean_df['Sales'].quantile(0.90)]
-bot_10 = clean_df[clean_df['Sales'] <= clean_df['Sales'].quantile(0.10)]
-
-cohort_summary = pd.DataFrame({
-    'Metric': ['Count', 'Mean Sales ($)', 'Mean Rating', 'Mean Visibility', 'Mean Weight (kg)'],
-    'Top 10% High-Performers': [len(top_10), top_10['Sales'].mean(), top_10['Rating'].mean(), top_10['Item Visibility'].mean(), top_10['Item Weight'].mean()],
-    'Bottom 10% Low-Performers': [len(bot_10), bot_10['Sales'].mean(), bot_10['Rating'].mean(), bot_10['Item Visibility'].mean(), bot_10['Item Weight'].mean()]
-})
-display(cohort_summary)
-"""))
-
-# Objective 4
-cells.append(nbf.v4.new_markdown_cell("""---
-## 💡 Objective 4: Help Management Make Better Business Decisions
-
-### 📋 Task 4.1: Identify the products that are contributing more to sales (Pareto Analysis)
-"""))
-
-cells.append(nbf.v4.new_code_cell("""# Task 4.1: Pareto Product Contribution Analysis
-sku_sales = clean_df.groupby('Item Identifier')['Sales'].sum().sort_values(ascending=False).reset_index()
-sku_sales['Cumulative_Share_%'] = (sku_sales['Sales'].cumsum() / sku_sales['Sales'].sum()) * 100
-sku_sales['Rank'] = range(1, len(sku_sales) + 1)
-
-top_20_count = int(len(sku_sales) * 0.20)
-top_20_rev_share = sku_sales.iloc[top_20_count]['Cumulative_Share_%']
-print(f"Top 20% of SKUs ({top_20_count} products) account for {top_20_rev_share:.2f}% of total sales revenue!")
-
-plt.figure(figsize=(9, 4.5))
-plt.plot(sku_sales['Rank'], sku_sales['Cumulative_Share_%'], color='#0C8346', lw=2.5)
-plt.axhline(80, color='red', linestyle='--', label='80% Revenue Target')
-plt.axvline(top_20_count, color='blue', linestyle=':', label=f'Top 20% SKUs ({top_20_count})')
-plt.title('Task 4.1: Product Pareto Cumulative Contribution Curve')
-plt.xlabel('Product Rank')
-plt.ylabel('Cumulative Sales Share (%)')
-plt.legend()
 plt.tight_layout()
 plt.show()
 """))
 
-cells.append(nbf.v4.new_markdown_cell("""### 📋 Task 4.2 & 4.3: Strategic Outlets, Underperforming Areas & Improvement Scope
-- **Top Outlet Formats:** Supermarket Type 1 and Supermarket Type 3 in Tier 3 locations dominate gross revenue.
-- **Underperforming Channels:** Grocery Stores (OUT010 & OUT019) produce lower total volume due to smaller catalog depth.
-- **Product Gaps:** Seafood (0.76% revenue) and Breakfast items (1.30% revenue) have low shelf space and low awareness.
+cells.append(nbf.v4.new_markdown_cell("""### 🍩 B. Circular Donut Charts (Formats & Operational KPIs)"""))
+
+cells.append(nbf.v4.new_code_cell("""# Circular Donut Charts with Centered KPI Metrics
+fig, axes = plt.subplots(1, 2, figsize=(15, 7))
+
+# 1. Circular Donut: Outlet Type Sales
+outlet_type_sales = clean_df.groupby('Outlet Type')['Sales'].sum().sort_values(ascending=False)
+axes[0].pie(outlet_type_sales, labels=[f"{k}: ${v:,.0f}" for k, v in outlet_type_sales.items()],
+            autopct='%1.1f%%', pctdistance=0.75, startangle=90, colors=['#0C8346', '#2563EB', '#D97706', '#9333EA'],
+            wedgeprops={'width': 0.45, 'edgecolor': 'white', 'linewidth': 3}, textprops={'fontweight': 'bold'})
+axes[0].text(0, 0.08, 'TOTAL SALES', ha='center', va='center', fontsize=11, fontweight='bold', color='#64748B')
+axes[0].text(0, -0.08, f"${clean_df['Sales'].sum():,.0f}", ha='center', va='center', fontsize=14, fontweight='bold', color='#0C8346')
+axes[0].set_title('Circular Donut: Sales Share by Store Format', fontsize=12, fontweight='bold')
+
+# 2. Circular Donut: Outlet Physical Size
+size_sales = clean_df.groupby('Outlet Size')['Sales'].sum().sort_values(ascending=False)
+axes[1].pie(size_sales, labels=[f"{k} Size: ${v:,.0f}" for k, v in size_sales.items()],
+            autopct='%1.1f%%', pctdistance=0.75, startangle=140, colors=['#059669', '#3B82F6', '#F59E0B'],
+            wedgeprops={'width': 0.45, 'edgecolor': 'white', 'linewidth': 3}, textprops={'fontweight': 'bold'})
+axes[1].text(0, 0.08, 'MEDIUM FORMAT', ha='center', va='center', fontsize=11, fontweight='bold', color='#64748B')
+axes[1].text(0, -0.08, '42.6% Share', ha='center', va='center', fontsize=14, fontweight='bold', color='#059669')
+axes[1].set_title('Circular Donut: Sales Share by Outlet Size', fontsize=12, fontweight='bold')
+
+plt.tight_layout()
+plt.show()
 """))
 
-cells.append(nbf.v4.new_code_cell("""# Tasks 4.2 & 4.3: Underperforming vs High-Performing Formats
-format_analysis = clean_df.groupby('Outlet Type').agg(
-    Total_Sales=('Sales', 'sum'),
-    Avg_Sales_Per_Item=('Sales', 'mean'),
-    Total_Items=('Sales', 'count'),
-    Avg_Rating=('Rating', 'mean')
-).sort_values(by='Total_Sales', ascending=False)
-display(format_analysis)
+cells.append(nbf.v4.new_markdown_cell("""### 📊 C. Bar Charts (Comparative & Ranking Analysis)"""))
+
+cells.append(nbf.v4.new_code_cell("""# Bar Charts Suite
+fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+
+# 1. Horizontal Bar Chart: Category Total Sales
+cat_sales = clean_df.groupby('Item Type')['Sales'].sum().sort_values(ascending=True)
+ax1 = cat_sales.plot(kind='barh', ax=axes[0], color='#0C8346', width=0.75)
+axes[0].set_title('Total Sales Revenue by Product Category ($)', fontsize=13, fontweight='bold')
+axes[0].set_xlabel('Total Revenue ($)')
+for p in ax1.patches:
+    w = p.get_width()
+    ax1.annotate(f"${w:,.0f}", (w + 1500, p.get_y() + p.get_height() / 2.), va='center', fontsize=8.5, fontweight='bold')
+
+# 2. Bar Chart: Outlet Total Sales Comparison
+out_sales = clean_df.groupby('Outlet Identifier')['Sales'].sum().sort_values(ascending=False)
+ax2 = sns.barplot(x=out_sales.index, y=out_sales.values, ax=axes[1], palette='Blues_r')
+axes[1].set_title('Total Sales Revenue Across 10 Outlets ($)', fontsize=13, fontweight='bold')
+axes[1].set_ylabel('Total Sales ($)')
+for p in ax2.patches:
+    ax2.annotate(f"${p.get_height():,.0f}", (p.get_x() + p.get_width() / 2., p.get_height() * 0.9),
+                 ha='center', va='center', color='white', fontweight='bold', fontsize=8)
+
+plt.tight_layout()
+plt.show()
 """))
 
-cells.append(nbf.v4.new_markdown_cell("""### 📋 Task 4.4: Practical Suggestions & Management Recommendations
-Based on empirical findings across the four objectives:
+# Objective 3 & 4
+cells.append(nbf.v4.new_markdown_cell("""---
+## 💡 Objective 3 & 4: Performance Drivers & Strategic Decision Making
+- Pearson correlation analysis verifying feature impact.
+- Pareto (80/20) analysis curve identifying revenue-driving SKUs.
+- Executive management decision framework.
+"""))
 
-1. 🏬 **Format Expansion in Tier 2/3 Towns:** Supermarket Type 3 (OUT027) demonstrates exceptional revenue density. BlinkIT should prioritize deploying large-format micro-fulfillment centers in growing Tier 2 and Tier 3 clusters.
-2. 📱 **Algorithm Visibility Optimization:** Correct zero-visibility products in the recommendation engine. 526 SKUs previously had 0.00 visibility, causing hidden demand suppression.
-3. 📦 **High-Velocity Category Cross-Merchandising:** Fruits & Vegetables (14.8%) and Snack Foods (14.4%) drive over 29% of gross revenue. Create dynamic checkout bundle recommendations pairing snacks with beverages and breakfast foods.
-4. 🌟 **Quality & Rating-Driven Re-stocking:** Promote items with customer ratings >= 4.5 stars via promotional badges, while reviewing suppliers for SKUs with ratings <= 3.0 stars.
-5. ❄️ **Cold-Chain Infrastructure:** Given the high revenue contribution of Dairy ($101K) and Frozen Foods ($118K), investing in local dark-store cooling infrastructure will reduce wastage and stock-outs.
+cells.append(nbf.v4.new_code_cell("""# Correlation Matrix & Pareto Analysis
+fig, axes = plt.subplots(1, 2, figsize=(15, 5.5))
+
+# 1. Correlation Heatmap
+corr_matrix = clean_df[['Sales', 'Item Visibility', 'Item Weight', 'Rating', 'Outlet Age']].corr()
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', fmt='.3f', vmin=-0.2, vmax=1.0, ax=axes[0])
+axes[0].set_title('Correlation Heatmap: Numerical Drivers vs Sales')
+
+# 2. Product Pareto Curve
+sku_sales = clean_df.groupby('Item Identifier')['Sales'].sum().sort_values(ascending=False).reset_index()
+sku_sales['Cumulative_Share_%'] = (sku_sales['Sales'].cumsum() / sku_sales['Sales'].sum()) * 100
+sku_sales['Rank'] = range(1, len(sku_sales) + 1)
+top_20_count = int(len(sku_sales) * 0.20)
+
+axes[1].plot(sku_sales['Rank'], sku_sales['Cumulative_Share_%'], color='#0C8346', lw=2.5)
+axes[1].axhline(80, color='red', linestyle='--', label='80% Revenue Target')
+axes[1].axvline(top_20_count, color='blue', linestyle=':', label=f'Top 20% SKUs ({top_20_count})')
+axes[1].set_title('Product Pareto (80/20) Cumulative Sales Curve')
+axes[1].set_xlabel('Product Rank')
+axes[1].set_ylabel('Cumulative Sales Share (%)')
+axes[1].legend()
+
+plt.tight_layout()
+plt.show()
+"""))
+
+cells.append(nbf.v4.new_markdown_cell("""---
+## 🎯 Executive Recommendations
+1. 🏬 **Replicate Supermarket Dark-Store Format in Tier 2/3 Clusters:** Capitalize on OUT027's volume leadership.
+2. 📱 **Fix Zero-Visibility Algorithm Blindspots:** Ensure all active catalog items are indexed.
+3. 📦 **High-Velocity Cross-Merchandising:** Bundle Snack Foods with Beverages and Dairy with Breakfast items.
+4. ❄️ **Cold-Chain Logistics Reinforcement:** Protect Produce, Dairy, and Frozen Foods ($398K combined revenue) from spoilage.
+5. 🌟 **Quality Interventions:** Highlight 4.5+ star items with promotional badges; audit suppliers of items under 3.5 stars.
 """))
 
 nb['cells'] = cells
@@ -376,10 +370,7 @@ notebook_path = os.path.join('notebooks', 'BlinkIT_Grocery_Sales_Analysis.ipynb'
 with open(notebook_path, 'w', encoding='utf-8') as f:
     nbf.write(nb, f)
 
-print(f"Saved notebook structure to {notebook_path}")
-
-# Execute the notebook to persist outputs
-print("Executing notebook with nbclient/ExecutePreprocessor...")
+print(f"Executing updated notebook {notebook_path}...")
 ep = ExecutePreprocessor(timeout=600, kernel_name='python3')
 with open(notebook_path, 'r', encoding='utf-8') as f:
     nb = nbf.read(f, as_version=4)
@@ -389,4 +380,4 @@ ep.preprocess(nb, {'metadata': {'path': 'notebooks'}})
 with open(notebook_path, 'w', encoding='utf-8') as f:
     nbf.write(nb, f)
 
-print(f"✓ Notebook executed and saved successfully with all cell outputs: {notebook_path}")
+print(f"✓ Notebook updated and pre-executed successfully with all graphical outputs: {notebook_path}")

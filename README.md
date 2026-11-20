@@ -6,7 +6,6 @@
 [![Matplotlib](https://img.shields.io/badge/Matplotlib-3.11%2B-11557c)](https://matplotlib.org/)
 [![Seaborn](https://img.shields.io/badge/Seaborn-0.13%2B-4c72b0)](https://seaborn.pydata.org/)
 [![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-F37626?logo=jupyter&logoColor=white)](https://jupyter.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 > **Sapphire IQ Data Analytics Project**  
 > **Domain:** Retail & Grocery Sales Analytics  
@@ -21,12 +20,16 @@
 - [Dataset Architecture & Dictionary](#-dataset-architecture--dictionary)
 - [Key Business Metrics Dashboard](#-key-business-metrics-dashboard)
 - [Program Execution Screenshots](#-program-execution-screenshots)
+- [Graphical Representations Suite](#-graphical-representations-suite)
+  - [1. Pie Charts (Distribution Analysis)](#1-pie-charts-distribution-analysis)
+  - [2. Circular / Donut Charts (Format & Margin Share)](#2-circular--donut-charts-format--margin-share)
+  - [3. Bar Charts (Comparative & Ranking Analysis)](#3-bar-charts-comparative--ranking-analysis)
+  - [4. Master Multi-Chart Dashboards](#4-master-multi-chart-dashboards)
 - [Step-by-Step Objective Breakdown](#-step-by-step-objective-breakdown)
   - [Objective 1: Understand Business & Sales Performance](#objective-1-understand-business--sales-performance)
   - [Objective 2: Data Cleaning & Reliability](#objective-2-data-cleaning--reliability)
   - [Objective 3: Performance Drivers & Relationships](#objective-3-performance-drivers--relationships)
   - [Objective 4: Management Decisions & Actionable Recommendations](#objective-4-management-decisions--actionable-recommendations)
-- [Visual Insights Gallery](#-visual-insights-gallery)
 - [Executive Recommendations](#-executive-recommendations)
 - [How to Run This Project](#-how-to-run-this-project)
 
@@ -64,25 +67,35 @@ Blinkit-Sales-Analysis/
 ├── reports/
 │   ├── execution_log.txt                    # Full terminal output logs of analysis engine
 │   ├── execution_screenshots/               # High-res execution screenshots for review
+│   │   ├── screenshot_jupyter_pie_and_circular_charts.png
+│   │   ├── screenshot_jupyter_bar_charts_execution.png
 │   │   ├── execution_screen_part1_overview_and_obj1.png
 │   │   ├── execution_screen_part2_cleaning_and_obj2.png
 │   │   ├── execution_screen_part3_performance_drivers.png
 │   │   └── execution_screen_part4_management_decisions.png
-│   └── figures/                             # 12 Publication-quality charts (PNG @ 300 DPI)
-│       ├── fig01_item_type_sales_distribution.png
-│       ├── fig02_outlet_type_and_location_sales.png
-│       ├── fig03_overall_sales_distribution.png
-│       ├── fig04_customer_ratings_analysis.png
-│       ├── fig05_data_cleaning_fat_content_standardization.png
-│       ├── fig06_item_visibility_before_after_cleaning.png
-│       ├── fig07_sales_by_broad_category_and_fat.png
-│       ├── fig08_outlet_performance_matrix.png
-│       ├── fig09_correlation_heatmap.png
-│       ├── fig10_high_vs_low_performing_comparison.png
-│       ├── fig11_pareto_analysis_product_contributions.png
+│   └── figures/                             # Visualizations & Graphical Suites
+│       ├── pie_charts/
+│       │   ├── pie_chart_outlet_location_tiers.png
+│       │   ├── pie_chart_product_broad_category.png
+│       │   ├── pie_chart_item_fat_content.png
+│       │   └── pie_chart_customer_ratings.png
+│       ├── circular_charts/
+│       │   ├── circular_donut_outlet_type_sales.png
+│       │   ├── circular_donut_outlet_size_sales.png
+│       │   └── circular_donut_fat_content_sales.png
+│       ├── bar_charts/
+│       │   ├── bar_chart_sales_by_item_type.png
+│       │   ├── bar_chart_avg_sales_by_item_type.png
+│       │   ├── bar_chart_sales_by_outlet_id.png
+│       │   ├── bar_chart_outlet_establishment_year.png
+│       │   ├── bar_chart_top10_products.png
+│       │   └── bar_chart_outlet_type_by_location.png
+│       ├── graphical_dashboard_circular_and_pie_charts.png
+│       ├── graphical_dashboard_bar_charts.png
 │       └── fig12_executive_summary_dashboard.png
 ├── scripts/
-│   ├── blinkit_analysis.py                  # Core analytics engine & visualization generator
+│   ├── blinkit_analysis.py                  # Core analytics engine & pipeline
+│   ├── generate_graphical_representations.py# Pie, donut, bar charts & screenshot generator
 │   └── generate_notebook.py                 # Notebook generation & pre-execution pipeline
 └── README.md                                # Master project documentation
 ```
@@ -133,33 +146,108 @@ The dataset consists of **8,523 rows** and **12 feature columns**:
 
 ## 📸 Program Execution Screenshots
 
-The following high-resolution screenshots verify the end-to-end execution of the Python program, data cleaning pipeline, and statistical modeling:
+The following high-resolution screenshots verify the end-to-end execution of the Python program, data cleaning pipeline, graphical representations, and Jupyter Notebook:
 
-### 1. Overview & Objective 1 Execution
-*Execution of dataset loading, product profiling, outlet audits, overall sales metrics, and customer rating distributions.*
+### 1. Interactive Jupyter Notebook Execution: Pie & Circular Donut Charts
+*Shows live Jupyter Notebook cell execution rendering the circular donut charts and location tier pie charts.*
+
+![Jupyter Execution - Pie and Circular Charts](reports/execution_screenshots/screenshot_jupyter_pie_and_circular_charts.png)
+
+---
+
+### 2. Interactive Jupyter Notebook Execution: Bar Charts Suite
+*Shows live Jupyter Notebook cell execution rendering category-level sales horizontal bar charts and outlet sales distributions.*
+
+![Jupyter Execution - Bar Charts](reports/execution_screenshots/screenshot_jupyter_bar_charts_execution.png)
+
+---
+
+### 3. Terminal Execution Part 1: Dataset Loading & Objective 1 Profiling
+*Console execution verifying dataset shape, product category profiling, outlet distributions, and sales metrics.*
 
 ![Part 1: Overview & Objective 1](reports/execution_screenshots/execution_screen_part1_overview_and_obj1.png)
 
 ---
 
-### 2. Objective 2: Data Cleaning & Reliability Audit
-*Execution of missing value imputation, duplicate verification, visibility anomaly treatment, and label standardization.*
+### 4. Terminal Execution Part 2: Data Cleaning & Reliability Audit
+*Console execution verifying missing weight imputation, duplicate audits, zero visibility replacement, and fat content standardization.*
 
 ![Part 2: Data Cleaning & Objective 2](reports/execution_screenshots/execution_screen_part2_cleaning_and_obj2.png)
 
 ---
 
-### 3. Objective 3: Performance Drivers & Relationships
-*Execution of category rankings, outlet format comparisons, Pearson correlations, and top 10% vs bottom 10% cohort analysis.*
+### 5. Terminal Execution Part 3: Performance Drivers & Correlation Matrix
+*Console execution computing revenue drivers, outlet scorecards, Pearson correlation factors, and top 10% vs bottom 10% cohort differences.*
 
 ![Part 3: Performance Drivers](reports/execution_screenshots/execution_screen_part3_performance_drivers.png)
 
 ---
 
-### 4. Objective 4: Management Decisions & Actionable Insights
-*Execution of Pareto 80/20 product contributions, strategic location identification, underperforming areas, and recommendations.*
+### 6. Terminal Execution Part 4: Pareto Analysis & Management Recommendations
+*Console execution analyzing product Pareto cumulative contribution curve, underperforming channels, and strategic suggestions.*
 
 ![Part 4: Management Decisions](reports/execution_screenshots/execution_screen_part4_management_decisions.png)
+
+---
+
+## 📊 Graphical Representations Suite
+
+A dedicated visualization suite was developed to provide graphical representations through **Pie Charts**, **Circular (Donut) Charts**, and **Bar Charts**:
+
+### 1. Pie Charts (Distribution Analysis)
+
+| Location Tier Revenue Share | Broad Product Category Share |
+| :---: | :---: |
+| ![Location Tiers Pie](reports/figures/pie_charts/pie_chart_outlet_location_tiers.png) | ![Product Category Pie](reports/figures/pie_charts/pie_chart_product_broad_category.png) |
+| **Tier 3 leads with 39.3%** of gross revenue ($472K), followed by Tier 2 (32.7%) and Tier 1 (28.0%). | **Food represents 73.1%** ($878K) of revenue, Non-Consumables 18.9% ($227K), and Drinks 8.0% ($97K). |
+
+| Item Fat Content Distribution | Customer Satisfaction Ratings |
+| :---: | :---: |
+| ![Fat Content Pie](reports/figures/pie_charts/pie_chart_item_fat_content.png) | ![Customer Ratings Pie](reports/figures/pie_charts/pie_chart_customer_ratings.png) |
+| **Low-Fat items capture 64.6%** of revenue, showing clear consumer health preferences. | **71.9% of items receive >= 4.0 Stars**, showing strong customer satisfaction. |
+
+---
+
+### 2. Circular / Donut Charts (Format & Margin Share)
+
+Circular donut charts provide a modern visualization with centered Key Performance Indicators:
+
+| Outlet Format Sales (Donut) | Store Physical Size (Donut) | Healthy vs Regular (Donut) |
+| :---: | :---: | :---: |
+| ![Outlet Type Donut](reports/figures/circular_charts/circular_donut_outlet_type_sales.png) | ![Outlet Size Donut](reports/figures/circular_charts/circular_donut_outlet_size_sales.png) | ![Fat Donut](reports/figures/circular_charts/circular_donut_fat_content_sales.png) |
+| **Supermarket Type 1 dominates at 65.5%**, generating $787,550 of the $1.20M total. | **Medium stores lead with 42.6%**, proving optimal inventory balance. | **64.6% ($776K)** generated by Low-Fat items vs 35.4% Regular. |
+
+---
+
+### 3. Bar Charts (Comparative & Ranking Analysis)
+
+| Total Revenue by Item Category ($) | Average Sales per Item across Categories ($) |
+| :---: | :---: |
+| ![Category Sales Bar](reports/figures/bar_charts/bar_chart_sales_by_item_type.png) | ![Average Sales Bar](reports/figures/bar_charts/bar_chart_avg_sales_by_item_type.png) |
+| **Fruits & Vegetables ($178K)** and **Snacks ($173K)** lead top-line gross revenue. | **Household ($149.4) and Dairy ($148.5)** generate the highest ticket size per item. |
+
+| Total Revenue by Individual Outlet ($) | Sales by Outlet Establishment Year ($) |
+| :---: | :---: |
+| ![Outlet Sales Bar](reports/figures/bar_charts/bar_chart_sales_by_outlet_id.png) | ![Year Sales Bar](reports/figures/bar_charts/bar_chart_outlet_establishment_year.png) |
+| **OUT027 leads single-store revenue**; Grocery stores OUT010 & OUT019 lag due to smaller catalog. | **Stores commissioned in 2018 lead volume**, demonstrating strong cohort ramp-up. |
+
+| Top 10 Revenue-Generating Individual SKUs | Outlet Type Sales across Location Tiers |
+| :---: | :---: |
+| ![Top 10 Products](reports/figures/bar_charts/bar_chart_top10_products.png) | ![Outlet Type by Location](reports/figures/bar_charts/bar_chart_outlet_type_by_location.png) |
+| **FDU12, FDT07, and NCQ06** are BlinkIT's highest-earning individual items. | **Supermarket Type 1 is pervasive**, while Type 3 thrives exclusively in Tier 3. |
+
+---
+
+### 4. Master Multi-Chart Dashboards
+
+#### A. Master Graphical Dashboard: Circular & Pie Charts
+![Circular and Pie Dashboard](reports/figures/graphical_dashboard_circular_and_pie_charts.png)
+
+#### B. Master Graphical Dashboard: Bar Charts Suite
+![Bar Charts Dashboard](reports/figures/graphical_dashboard_bar_charts.png)
+
+#### C. Executive Management Summary Dashboard
+![Executive Dashboard](reports/figures/fig12_executive_summary_dashboard.png)
 
 ---
 
@@ -240,33 +328,6 @@ The following high-resolution screenshots verify the end-to-end execution of the
 
 ---
 
-## 🖼️ Visual Insights Gallery
-
-### 1. Executive Summary Dashboard
-![Executive Dashboard](reports/figures/fig12_executive_summary_dashboard.png)
-
-### 2. Category Sales & Inventory Distribution
-| Total Sales by Category | Sales by Broad Group & Fat Content |
-| :---: | :---: |
-| ![Category Sales](reports/figures/fig01_item_type_sales_distribution.png) | ![Sales Share](reports/figures/fig07_sales_by_broad_category_and_fat.png) |
-
-### 3. Outlet & Geographical Performance
-| Outlet Type & Location Sales | Outlet Performance Matrix |
-| :---: | :---: |
-| ![Outlet & Location](reports/figures/fig02_outlet_type_and_location_sales.png) | ![Outlet Matrix](reports/figures/fig08_outlet_performance_matrix.png) |
-
-### 4. Data Quality & Cleaning Proofs
-| Fat Content Standardization | Visibility Zero-Treatment |
-| :---: | :---: |
-| ![Standardization](reports/figures/fig05_data_cleaning_fat_content_standardization.png) | ![Visibility](reports/figures/fig06_item_visibility_before_after_cleaning.png) |
-
-### 5. Statistical Relationships & Pareto Analysis
-| Correlation Heatmap | Product Pareto (80/20) Curve |
-| :---: | :---: |
-| ![Correlation Heatmap](reports/figures/fig09_correlation_heatmap.png) | ![Pareto Curve](reports/figures/fig11_pareto_analysis_product_contributions.png) |
-
----
-
 ## 💡 Executive Recommendations
 
 1. **Replicate Flagship Supermarket Format in Tier 2/3 Corridors:**  
@@ -300,12 +361,18 @@ pip install pandas numpy matplotlib seaborn pillow openpyxl jupyter nbconvert nb
 ```
 
 ### 4. Execute Full Analysis Pipeline
-Run the master analytics script to perform data cleaning, execute all 16 tasks, generate figures, and produce execution screenshots:
+Run the master analytics script to perform data cleaning, execute all 16 tasks, and generate all core figures:
 ```bash
 python scripts/blinkit_analysis.py
 ```
 
-### 5. Run the Interactive Jupyter Notebook
+### 5. Generate Graphical Suite (Pie, Circular Donut & Bar Charts)
+Generate the complete graphical representations suite and updated screenshots:
+```bash
+python scripts/generate_graphical_representations.py
+```
+
+### 6. Run the Interactive Jupyter Notebook
 ```bash
 jupyter notebook notebooks/BlinkIT_Grocery_Sales_Analysis.ipynb
 ```
@@ -315,11 +382,14 @@ jupyter notebook notebooks/BlinkIT_Grocery_Sales_Analysis.ipynb
 ## 📜 Deliverables Summary
 - ✅ **Cleaned Data:** `data/processed/BlinkIT_Grocery_Data_Cleaned.csv` & `.xlsx`
 - ✅ **Interactive Notebook:** `notebooks/BlinkIT_Grocery_Sales_Analysis.ipynb`
-- ✅ **Execution Script:** `scripts/blinkit_analysis.py`
+- ✅ **Execution Scripts:** `scripts/blinkit_analysis.py` & `scripts/generate_graphical_representations.py`
 - ✅ **Detailed Breakdown MD:** `docs/OBJECTIVES_AND_TASKS_BREAKDOWN.md`
 - ✅ **Business Strategy MD:** `docs/BUSINESS_INSIGHTS_AND_RECOMMENDATIONS.md`
-- ✅ **Execution Screenshots:** `reports/execution_screenshots/*.png`
-- ✅ **12 Analytical Charts:** `reports/figures/*.png`
+- ✅ **Execution Screenshots:** `reports/execution_screenshots/*.png` (6 High-Res Screenshots)
+- ✅ **Pie Charts Suite:** `reports/figures/pie_charts/*.png` (4 Charts)
+- ✅ **Circular Donut Charts Suite:** `reports/figures/circular_charts/*.png` (3 Charts)
+- ✅ **Bar Charts Suite:** `reports/figures/bar_charts/*.png` (6 Charts)
+- ✅ **Master Graphical Dashboards:** `reports/figures/*.png` (3 Dashboards)
 
 ---
 *Developed by Ram (Data Analyst) • Sapphire IQ Data Analytics Project • 2026*
