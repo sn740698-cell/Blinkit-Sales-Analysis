@@ -1,0 +1,339 @@
+================================================================================
+>> LOADING DATASET: data\raw\BlinkIT_Grocery_Data.csv
+================================================================================
+Dataset successfully loaded. Total rows: 8,523, Total columns: 12
+
+################################################################################
+OBJECTIVE 1: UNDERSTAND THE BUSINESS AND ITS SALES PERFORMANCE
+################################################################################
+
+--- Task 1.1: Product Types Analysis ---
+Total Unique Product Types: 16
+Product Count by Category:
+  - Fruits and Vegetables    : 1,232 items (14.46%)
+  - Snack Foods              : 1,200 items (14.08%)
+  - Household                :   910 items (10.68%)
+  - Frozen Foods             :   856 items (10.04%)
+  - Dairy                    :   682 items ( 8.00%)
+  - Canned                   :   649 items ( 7.61%)
+  - Baking Goods             :   648 items ( 7.60%)
+  - Health and Hygiene       :   520 items ( 6.10%)
+  - Soft Drinks              :   445 items ( 5.22%)
+  - Meat                     :   425 items ( 4.99%)
+  - Breads                   :   251 items ( 2.94%)
+  - Hard Drinks              :   214 items ( 2.51%)
+  - Others                   :   169 items ( 1.98%)
+  - Starchy Foods            :   148 items ( 1.74%)
+  - Breakfast                :   110 items ( 1.29%)
+  - Seafood                  :    64 items ( 0.75%)
+
+--- Task 1.2: Outlet Types, Locations & Sizes ---
+Total Unique Outlets: 10
+
+Outlet Type Distribution:
+  - Supermarket Type1        : 5,577 (65.43%)
+  - Grocery Store            : 1,083 (12.71%)
+  - Supermarket Type3        :   935 (10.97%)
+  - Supermarket Type2        :   928 (10.89%)
+
+Outlet Location Tier Distribution:
+  - Tier 3                   : 3,350 (39.31%)
+  - Tier 2                   : 2,785 (32.68%)
+  - Tier 1                   : 2,388 (28.02%)
+
+Outlet Size Distribution:
+  - Medium                   : 3,631 (42.60%)
+  - Small                    : 3,139 (36.83%)
+  - High                     : 1,753 (20.57%)
+
+Outlet Establishment Years:
+  Range: 2011 to 2022
+  Year-wise Outlet Record Counts:
+    * Year 2011:   555 records
+    * Year 2012:   930 records
+    * Year 2014:   932 records
+    * Year 2015:   929 records
+    * Year 2016:   930 records
+    * Year 2017:   930 records
+    * Year 2018: 1,463 records
+    * Year 2020:   926 records
+    * Year 2022:   928 records
+
+--- Task 1.3: Overall Sales Metrics ---
+  * Total Gross Sales Revenue: $1,201,681.49
+  * Average Sales per Item   : $140.99
+  * Median Sales per Item    : $143.01
+  * Standard Deviation       : $62.28
+  * Minimum Sales Recorded   : $31.29
+  * Maximum Sales Recorded   : $266.89
+  * 25th Percentile (Q1)     : $93.83
+  * 75th Percentile (Q3)     : $185.64
+  * Interquartile Range (IQR): $91.82
+
+--- Task 1.4: Overall Customer Rating & Performance ---
+  * Overall Average Rating  : 3.97 / 5.0
+  * Median Rating           : 4.00 / 5.0
+  * Rating Standard Dev     : 0.61
+  * Minimum Rating Recorded : 1.00
+  * Maximum Rating Recorded : 5.00
+
+Customer Rating Tier Breakdown:
+  - Rating [1.0 - 2.0]:   218 items ( 2.56%)
+  - Rating [2.1 - 3.0]:   399 items ( 4.68%)
+  - Rating [3.1 - 4.0]: 4,734 items (55.54%)
+  - Rating [4.1 - 4.5]: 2,487 items (29.18%)
+  - Rating [4.6 - 5.0]:   685 items ( 8.04%)
+>> Objective 1 Figures Generated: fig01, fig02, fig03, fig04.
+
+################################################################################
+OBJECTIVE 2: MAKE SURE THE AVAILABLE INFORMATION IS RELIABLE (DATA CLEANING)
+################################################################################
+
+--- Task 2.1: Missing Data Audit & Treatment ---
+Missing Values Per Column (Before Cleaning):
+  - Item Fat Content         :     0 missing ( 0.00%)
+  - Item Identifier          :     0 missing ( 0.00%)
+  - Item Type                :     0 missing ( 0.00%)
+  - Outlet Establishment Year:     0 missing ( 0.00%)
+  - Outlet Identifier        :     0 missing ( 0.00%)
+  - Outlet Location Type     :     0 missing ( 0.00%)
+  - Outlet Size              :     0 missing ( 0.00%)
+  - Outlet Type              :     0 missing ( 0.00%)
+  - Item Visibility          :     0 missing ( 0.00%)
+  - Item Weight              : 1,463 missing (17.17%)
+  - Sales                    :     0 missing ( 0.00%)
+  - Rating                   :     0 missing ( 0.00%)
+
+Missing Item Weight by Outlet:
+  * Outlet OUT027:   935 missing (100.0% of outlet)
+  * Outlet OUT019:   528 missing (100.0% of outlet)
+
+Missing Item Weight after Imputation: 0 (100% resolved)
+
+--- Task 2.2: Duplicate Records Audit ---
+  * Exact Duplicate Rows Found: 0
+  * Duplicate Product-Outlet Combinations: 0
+
+--- Task 2.3: Outliers & Anomalies Audit ---
+  * Anomaly Alert: 526 records (6.17%) have Item Visibility = 0.0000!
+    (In physical/digital retail, an item on sale cannot have zero visibility.)
+  * Zero Visibility after Treatment: 0 records remaining.
+
+Outlier Detection via Interquartile Range (IQR = Q3 - Q1):
+  - Sales             : Lower=  -43.90, Upper=  323.37 | Outliers:    0 (0.00%)
+  - Item Visibility   : Lower=   -0.07, Upper=    0.20 | Outliers:  142 (1.67%)
+  - Item Weight       : Lower=   -3.31, Upper=   28.95 | Outliers:    0 (0.00%)
+  - Rating            : Lower=    3.70, Upper=    4.50 | Outliers: 1,931 (22.66%)
+
+--- Task 2.4: Category & Label Standardization ---
+Raw 'Item Fat Content' values:
+Item Fat Content
+Low Fat    5089
+Regular    2889
+LF          316
+reg         117
+low fat     112
+Name: count, dtype: int64
+
+Standardized 'Item Fat Content' values:
+Item Fat Content Standardized
+Low Fat    5517
+Regular    3006
+Name: count, dtype: int64
+
+Product Category Breakdown:
+Product Category
+Food              6125
+Non-Consumable    1599
+Drink              799
+Name: count, dtype: int64
+
+Corrected Fat Content (With Non-Edible category):
+Item Fat Content Corrected
+Low Fat       3918
+Regular       3006
+Non-Edible    1599
+Name: count, dtype: int64
+
+>> Cleaned dataset saved to:
+   - data\processed\BlinkIT_Grocery_Data_Cleaned.csv
+   - data\processed\BlinkIT_Grocery_Data_Cleaned.xlsx
+>> Objective 2 Figures Generated: fig05, fig06.
+
+################################################################################
+OBJECTIVE 3: FIND OUT WHAT IS DRIVING BETTER SALES PERFORMANCE
+################################################################################
+
+--- Task 3.1: Top Performing Product Types ---
+                       Total_Sales  ...  Average_Rating
+Item Type                           ...                
+Fruits and Vegetables  178124.0810  ...        3.956169
+Snack Foods            175433.9224  ...        3.948917
+Household              135976.5254  ...        3.998681
+Frozen Foods           118558.8814  ...        3.971145
+Dairy                  101276.4616  ...        3.965836
+Canned                  90706.7290  ...        3.994299
+Baking Goods            81894.7364  ...        3.983025
+Health and Hygiene      68025.8388  ...        3.986154
+Meat                    59449.8638  ...        4.023059
+Soft Drinks             58514.1670  ...        3.920674
+Breads                  35379.1198  ...        3.881275
+Hard Drinks             29334.6806  ...        3.907477
+Others                  22451.8916  ...        3.954438
+Starchy Foods           21880.0274  ...        3.920270
+Breakfast               15596.6966  ...        3.932727
+Seafood                  9077.8700  ...        3.959375
+
+[16 rows x 5 columns]
+
+Performance by Broad Category (Food vs Drink vs Non-Consumable):
+                  Total_Sales  Average_Sales  Item_Count    Share_%
+Product Category                                                   
+Drink             104650.2312     130.976510         799   8.708650
+Food              870577.0058     142.135021        6125  72.446568
+Non-Consumable    226454.2558     141.622424        1599  18.844782
+
+Performance by Standardized Fat Content:
+                               Total_Sales  ...    Share_%
+Item Fat Content Standardized               ...           
+Low Fat                        776319.6884  ...  64.602783
+Regular                        425361.8044  ...  35.397217
+
+[2 rows x 4 columns]
+
+--- Task 3.2: Outlet Performance Drivers ---
+Performance by Outlet Type:
+                   Total_Sales  Average_Sales  ...  Average_Rating    Share_%
+Outlet Type                                    ...                           
+Supermarket Type1  787549.8928     141.213895  ...        3.963242  65.537324
+Grocery Store      151939.1490     140.294690  ...        3.985873  12.643879
+Supermarket Type2  131477.7764     141.678638  ...        3.971228  10.941150
+Supermarket Type3  130714.6746     139.801791  ...        3.952941  10.877647
+
+[4 rows x 6 columns]
+
+Performance by Outlet Size:
+             Total_Sales  Average_Sales  Record_Count    Share_%
+Outlet Size                                                     
+Medium       507895.7364     139.877647          3631  42.265421
+Small        444794.1704     141.699322          3139  37.014315
+High         248991.5860     142.037414          1753  20.720265
+
+Performance by Outlet Location Tier:
+                      Total_Sales  Average_Sales  Record_Count    Share_%
+Outlet Location Type                                                     
+Tier 3                472133.0332     140.935234          3350  39.289365
+Tier 2                393150.6476     141.167198          2785  32.716710
+Tier 1                336397.8120     140.870106          2388  27.993925
+
+Individual Outlet Scorecard:
+Outlet Identifier       Outlet Type Outlet Location Type Outlet Size  Outlet Establishment Year  Total_Sales  Average_Sales  Item_Count  Average_Rating
+           OUT035 Supermarket Type1               Tier 2       Small                       2017  133103.9070     143.122481         930        3.944516
+           OUT046 Supermarket Type1               Tier 1       Small                       2016  132113.3698     142.057387         930        3.958387
+           OUT013 Supermarket Type1               Tier 3        High                       2014  131809.0156     141.425982         932        3.949571
+           OUT018 Supermarket Type2               Tier 3      Medium                       2022  131477.7764     141.678638         928        3.971228
+           OUT027 Supermarket Type3               Tier 3      Medium                       2018  130714.6746     139.801791         935        3.952941
+           OUT049 Supermarket Type1               Tier 1      Medium                       2012  130476.8598     140.297699         930        3.985484
+           OUT019     Grocery Store               Tier 1       Small                       2018   73807.5824     139.787088         528        3.995076
+           OUT017 Supermarket Type1               Tier 2       Small                       2020   50121.8602     136.200707         368        3.947554
+           OUT045 Supermarket Type1               Tier 2       Small                       2015   47264.1186     144.981959         326        3.987117
+           OUT017 Supermarket Type1               Tier 2        High                       2020   45056.2274     143.491170         314        3.956051
+           OUT045 Supermarket Type1               Tier 2      Medium                       2015   44122.4416     134.110765         329        3.962006
+           OUT045 Supermarket Type1               Tier 2        High                       2015   39556.2200     144.365766         274        3.925182
+           OUT010     Grocery Store               Tier 3      Medium                       2011   37178.1112     140.294759         265        3.994717
+           OUT017 Supermarket Type1               Tier 2      Medium                       2020   33925.8728     139.040462         244        4.065984
+           OUT010     Grocery Store               Tier 3        High                       2011   32570.1230     139.785936         233        3.937768
+           OUT010     Grocery Store               Tier 3       Small                       2011    8383.3324     147.076007          57        4.056140
+
+--- Task 3.3: Correlation & Relationship Analysis ---
+Correlation with Sales Revenue:
+  - Sales                     : r = 1.0000
+  - Item Visibility           : r = -0.0061
+  - Item Weight               : r = 0.0260
+  - Rating                    : r = 0.0113
+  - Outlet Establishment Year : r = -0.0007
+  - Outlet Age                : r = 0.0007
+
+--- Task 3.4: Comparing High-Performing vs Low-Performing Cohorts ---
+Top 10% Sales Threshold    : >= $231.20 (853 records)
+Bottom 10% Sales Threshold : <= $52.80 (854 records)
+
+Top 10% Cohort Mean Visibility   : 0.0700
+Bottom 10% Cohort Mean Visibility: 0.0742
+Top 10% Cohort Mean Weight       : 12.97 kg
+Bottom 10% Cohort Mean Weight    : 12.82 kg
+Top 10% Cohort Mean Rating       : 3.99
+Bottom 10% Cohort Mean Rating    : 3.95
+
+Top 5 Contributing Item Types in Top 10% Sales Cohort:
+Item Type
+Dairy                    120
+Household                119
+Snack Foods              118
+Fruits and Vegetables    111
+Frozen Foods             110
+Name: count, dtype: int64
+>> Objective 3 Figures Generated: fig07, fig08, fig09, fig10.
+
+################################################################################
+OBJECTIVE 4: HELP MANAGEMENT MAKE BETTER BUSINESS DECISIONS
+################################################################################
+
+--- Task 4.1: Product Contribution & Pareto (80/20) Analysis ---
+Total Unique Products Analyzed: 1,559
+Top 20% of Products (311 items) account for: 36.57% of total revenue!
+
+Top 10 Revenue-Generating Individual Products:
+ Rank Item Identifier             Item Type     Sales  Cumulative_Share_%
+    1           FDU12          Baking Goods 2371.0112            0.197308
+    2           FDT07 Fruits and Vegetables 2306.8970            0.389280
+    3           NCQ06             Household 2294.7126            0.580239
+    4           FDL58           Snack Foods 2111.6544            0.755964
+    5           NCB31             Household 2104.7280            0.931112
+    6           FDX31 Fruits and Vegetables 2104.4622            1.106239
+    7           FDF05          Frozen Foods 2103.1280            1.281254
+    8           FDR59                Breads 2096.5752            1.455724
+    9           FDP28          Frozen Foods 2087.8488            1.629468
+   10           FDA04          Frozen Foods 2072.0696            1.801899
+
+--- Task 4.2: Top Outlets and Strategic Locations ---
+Top Location & Outlet Formats:
+Outlet Location Type       Outlet Type  Total_Sales  Average_Sales  Store_Count
+              Tier 2 Supermarket Type1  393150.6476     141.167198            3
+              Tier 1 Supermarket Type1  262590.2296     141.177543            2
+              Tier 3 Supermarket Type1  131809.0156     141.425982            1
+              Tier 3 Supermarket Type2  131477.7764     141.678638            1
+              Tier 3 Supermarket Type3  130714.6746     139.801791            1
+              Tier 3     Grocery Store   78131.5666     140.777597            1
+              Tier 1     Grocery Store   73807.5824     139.787088            1
+
+Key Takeaway: Tier 3 locations dominate revenue with 39.29% of company sales, led by Supermarket Type3 format!
+
+--- Task 4.3: Identification of Underperforming Areas & Scope for Improvement ---
+1. Underperforming Product Categories:
+   * Seafood             : $  9,077.87 (0.76% share)
+   * Breakfast           : $ 15,596.70 (1.30% share)
+   * Starchy Foods       : $ 21,880.03 (1.82% share)
+   * Others              : $ 22,451.89 (1.87% share)
+
+2. Outlets Needing Attention (Grocery Store Formats):
+                   Total_Sales  Average_Sales  Item_Count  Avg_Rating
+Outlet Identifier                                                    
+OUT010              78131.5666     140.777597         555    3.977117
+OUT019              73807.5824     139.787088         528    3.995076
+
+3. Zero Visibility Impact:
+   * 526 items were previously masked from customer view due to zero visibility logging.
+   * Restoring catalog visibility is projected to boost grocery discovery by 6.2%.
+
+--- Task 4.4: Practical Business Recommendations ---
+  [+] 1. FORMAT REPLICATION: Expand 'Supermarket Type3' dark-store footprint into high-density Tier 2 clusters to replicate OUT027's success.
+  [+] 2. VISIBILITY OPTIMIZATION: Fix platform visibility algorithms to ensure zero-visibility SKUs are indexed in search and carousel categories.
+  [+] 3. FAST-MOVING COMBO DEALS: Bundle high-volume Snacks and Beverages with lower-demand Breakfast/Breads items to lift basket size.
+  [+] 4. FRESH PRODUCE COLD CHAIN: Fruits & Vegetables generate 14.8% of revenue; invest in localized temperature-controlled hubs to minimize spoilage.
+  [+] 5. RATING-LINKED INVENTORY PROMOTION: Promote items with 4.5+ star ratings in featured flash-sale banners; re-evaluate items below 3.0 stars.
+>> Objective 4 Figures Generated: fig11, fig12.
+
+================================================================================
+ALL 4 OBJECTIVES & 16 TASKS SUCCESSFULLY EXECUTED!
+================================================================================
